@@ -1,12 +1,18 @@
-# fly.toml app configuration file generated for hosted-payment-test on 2024-05-14T17:52:38+10:00
+# fly.toml app configuration file generated for hosted-payment-test-aged-glitter-0 on 2024-05-14T18:02:06+10:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'hosted-payment-test'
+app = 'hosted-payment-test-aged-glitter-0'
 primary_region = 'syd'
 
 [build]
+
+[env]
+  PORT = "8081"
+  HOST = "https://hosted-payment-test-hidden-shadow-9014.fly.dev"
+  SHOPIFY_API_KEY = "2f4edaa67ab826c7ab31e5cbbd0cd5d3"
+  SCOPES = "write_products"
 
 [http_service]
   internal_port = 3000
