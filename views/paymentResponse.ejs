@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout - Simplify Payments</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+        .form-header {
+            background-color: #007BFF; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <% if (paymentStatus === 'APPROVED') { %>
+            <h3>Order #<%= paymentId %></h3>
+            <div>
+                <!-- List products and prices -->
+                <% orders.forEach(order => { %>
+                    <p><%= order.productName %> - $<%= order.price.toFixed(2) %> x <%= order.quantity %></p>
+                <% }); %>
+                <h4>Total Amount: $<%= (totalAmount / 100).toFixed(2) %></h4>
+                <h4>Your order will be shipped to:</h4>
+                <p><%= address %>, <%= city %>, <%= state %> <%= zip %></p>
+            </div>
+        <% } else { %>
+            <p>Sorry, your payment has been declined.</p>
+        <% } %>
+        <footer>
+            <p>Powered by <a href="http://www.simplify.com">Simplify.com</a></p>
+            <p>Visit <a href="<%= merchantUrl %>" target="_blank"><%= merchantUrlDisplay %></a></p>
+        </footer>
+    </div>
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>
