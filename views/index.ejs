@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order - <%= merchant.name %></title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        .form-header {
+            /* background-color: <%= merchant.mainColor %> !important; */
+            background-color: #000;
+        }
+        .btn-custom {
+            /* background-color: <%= merchant.mainColor %> !important; */
+            background-color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><%= merchant.header %></h1>
+        <p><%= merchant.description %></p>
+
+        <form id="order_form" action="<%= merchant.enableHostedPayments ? '/hosted-checkout' : '/checkout' %>" method="POST">
+            <% merchant.products.forEach((product, index) => { %>
+            <div class="product">
+                <img src="<%= product.imgUrl %>" alt="<%= product.name %>">
+                <div>
+                    <h2><%= product.name %></h2>
+                    <p><%= product.description %></p>
+                    <p>Price: $<%= (product.price / 100).toFixed(2) %></p>
+                    <input type="number" name="quantity<%= index %>" min="0" max="20" value="0">
+                </div>
+            </div>
+            <% }); %>
+            <button type="submit" class="btn btn-custom">Place Order</button>
+        </form>
+    </div>
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>
