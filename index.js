@@ -9,8 +9,13 @@ const app = express();
 /* Set up EJS for templating */
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
 app.use(bodyParser.urlencoded({ extended: true }));       // Middleware to parse POST data
 app.use(express.static(path.join(__dirname, 'public')));  // Middleware to serve static files
+
+/* Use the charge route for payment processing */
+app.use('/charge', chargeRouter);
+
 
 /* Route to display the main order form */
 app.get('/', (req, res) => {
@@ -32,12 +37,12 @@ app.get('/', (req, res) => {
 
 /* Routes for form submissions */
 app.post('/hosted-checkout', (req, res) => {
-  // Logic for hosted checkout
+  // TODO: Logic for hosted checkout
   res.send("Hosted Checkout Page");
 });
 
 app.post('/checkout', (req, res) => {
-  // Logic for direct checkout
+  // TODO: Logic for direct checkout
   res.send("Direct Checkout Page");
 });
 
