@@ -1,3 +1,123 @@
-<!-- TODO: 
-    1. Use this to render HTML form and includes JS  // 渲染HTML表单，包含JS
-    2. Handles token generation and form submission. // 处理令牌生成和表单提交 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .payment-form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 400px;
+        }
+        .payment-form h2 {
+            margin-bottom: 20px;
+        }
+        .payment-form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .payment-form input[type="text"],
+        .payment-form input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .payment-form .short-input {
+            width: calc(50% - 20px);
+            display: inline-block;
+        }
+        .payment-form button {
+            width: 100%;
+            padding: 15px;
+            background-color: #0044cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .payment-form button:disabled {
+            background-color: #ccc;
+        }
+    </style>
+    <script src="https://www.simplify.com/commerce/v1/simplify.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="payment-form">
+        <h2>Payment Form</h2>
+        <div id="credit-card-form">
+            <label for="cardNumber">Card number</label>
+            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456">
+
+            <div style="display: flex; justify-content: space-between;">
+                <div class="short-input">
+                    <label for="expiryDate">Expiry date</label>
+                    <input type="text" id="expiryDate" placeholder="MM/YY">
+                </div>
+                <div class="short-input">
+                    <label for="securityCode">Security code</label>
+                    <input type="password" id="securityCode" placeholder="3 digits">
+                </div>
+            </div>
+        </div>
+        <button id="payButton" type="button">Pay $<%= amount %></button>
+    </div>
+
+    <script>
+        const publicKey = '<%= process.env.SIMPLIFY_API_PUBLIC_KEY %>';
+        const amount = '<%= amount %>';
+        const orderId = '<%= orderId %>';
+
+        document.getElementById('payButton').addEventListener('click', function () {
+            const cardNumber = document.getElementById('cardNumber').value;
+            const expiryDate = document.getElementById('expiryDate').value.split('/');
+            const securityCode = document.getElementById('securityCode').value;
+
+            SimplifyCommerce.generateToken({
+                key: publicKey,
+                card: {
+                    number: cardNumber,
+                    cvc: securityCode,
+                    expMonth: expiryDate[0],
+                    expYear: expiryDate[1]
+                }
+            }, simplifyResponseHandler);
+        });
+
+        function simplifyResponseHandler(data) {
+            if (data.error) {
+                console.error('Error creating card token', data);
+                alert('Error creating card token: ' + data.error.message);
+            } else {
+                const token = data.id;
+                $.post('/charge', {
+                    simplifyToken: token,
+                    amount: amount * 100, // Amount in cents
+                    orderId: orderId
+                }).done(function (response) {
+                    alert('Payment successfully processed: ' + response.id);
+                    // Redirect back to Shopify with order ID and payment status
+                    window.location.href = `/payment-success?orderId=${orderId}&status=success`;
+                }).fail(function (jqXHR, status) {
+                    alert('Payment processing failed: ' + status);
+                    window.location.href = `/payment-fail?orderId=${orderId}&status=fail`;
+                });
+            }
+        }
+    </script>
+    
+</body>
+</html>
