@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Form</title>
+    <title>CommBank Simplify Payment Form</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,6 +12,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            margin: 0;
         }
         .payment-form {
             background: #fff;
@@ -19,13 +20,20 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             width: 400px;
+            text-align: center;
         }
         .payment-form h2 {
+            margin-bottom: 20px;
+            color: #0044cc;
+        }
+        .payment-form img {
+            max-height: 50px;
             margin-bottom: 20px;
         }
         .payment-form label {
             display: block;
             margin-bottom: 5px;
+            text-align: left;
         }
         .payment-form input[type="text"],
         .payment-form input[type="password"] {
@@ -47,9 +55,15 @@
             border: none;
             border-radius: 5px;
             font-size: 16px;
+            cursor: pointer;
         }
         .payment-form button:disabled {
             background-color: #ccc;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #999;
         }
     </style>
     <script src="https://www.simplify.com/commerce/v1/simplify.js"></script>
@@ -57,6 +71,7 @@
 </head>
 <body>
     <div class="payment-form">
+        <img src="/images/simplifyLogo@2x.png" alt="Simplify Logo">
         <h2>Payment Form</h2>
         <div id="credit-card-form">
             <label for="cardNumber">Card number</label>
@@ -74,6 +89,10 @@
             </div>
         </div>
         <button id="payButton" type="button">Pay $<%= amount %></button>
+        <div class="footer">
+            <img src="/images/commbank_logo.png" alt="CommBank Logo">
+            <p>Secured by CommBank and Simplify Commerce</p>
+        </div>
     </div>
 
     <script>
