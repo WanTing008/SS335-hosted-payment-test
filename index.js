@@ -2,18 +2,18 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const chargeRouter = require('./routes/charge'); // Import the charge module
+const shopifyAPI = require('shopify-node-api'); // Import Shopify API library
 
 const app = express();
-const chargeRouter = require('./routes/charge');            // Import the charge module
-const shopifyAPI = require('shopify-node-api');             // Import Shopify API library
 
 /* Set up EJS for templating */
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use(bodyParser.json());                                 // Middleware to parse JSON data
-app.use(bodyParser.urlencoded({ extended: true }));         // Middleware to parse POST data
-app.use(express.static(path.join(__dirname, 'public')));    // Middleware to serve static files
+app.use(bodyParser.json()); // Middleware to parse JSON data
+app.use(bodyParser.urlencoded({ extended: true })); // Middleware to parse POST data
+app.use(express.static(path.join(__dirname, 'public'))); // Middleware to serve static files
 
 /* Use the charge route for payment processing */
 app.use('/charge', chargeRouter);
@@ -23,6 +23,11 @@ const Shopify = new shopifyAPI({
     shop: process.env.SHOPIFY_SHOP_NAME,
     shopify_api_key: process.env.SHOPIFY_API_KEY,
     access_token: process.env.SHOPIFY_ACCESS_TOKEN
+});
+
+/* Root route */
+app.get('/', (req, res) => {
+    res.redirect('/payment?amount=100&orderId=12345'); // Redirect to the payment form with test data
 });
 
 /* Route to render the payment form with order details */
