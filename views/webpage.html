@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .payment-form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 400px;
+        }
+        .payment-form h2 {
+            margin-bottom: 20px;
+        }
+        .payment-form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .payment-form input[type="text"],
+        .payment-form input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .payment-form .short-input {
+            width: calc(50% - 20px);
+            display: inline-block;
+        }
+        .payment-form .radio-group {
+            margin-bottom: 20px;
+        }
+        .payment-form .radio-group label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .payment-form .radio-group input[type="radio"] {
+            margin-right: 10px;
+        }
+        .payment-form button {
+            width: 100%;
+            padding: 15px;
+            background-color: #0044cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .payment-form button:disabled {
+            background-color: #ccc;
+        }
+        .payment-form img {
+            max-height: 20px;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-form">
+        <div class="radio-group">
+            <label>
+                <input type="radio" name="paymentMethod" checked>
+                Credit Card
+            </label>
+            <div id="credit-card-form">
+                <label for="cardNumber">Card number</label>
+                <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" style="width: calc(100% - 20px);">
+
+                <div style="display: flex; justify-content: space-between;">
+                    <div class="short-input">
+                        <label for="expiryDate">Expiry date</label>
+                        <input type="text" id="expiryDate" placeholder="MM/YY" style="width: calc(100% - 10px);">
+                    </div>
+                    <div class="short-input">
+                        <label for="securityCode">Security code</label>
+                        <input type="password" id="securityCode" placeholder="3 digits" style="width: calc(100% - 10px);">
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="radio-group">
+            <label>
+                <input type="radio" name="paymentMethod">
+                Google Pay
+            </label>
+        </div>
+
+        <div class="radio-group">
+            <label>
+                <input type="radio" name="paymentMethod">
+                PayPal
+            </label>
+        </div>
+        <button type="button">Pay $100.00</button>
+    </div>
+</body>
+</html>
