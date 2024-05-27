@@ -3,14 +3,14 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'hosted-payment-test-aged-glitter-0'
+app = 'simplify-commerce-hosted-payment'
 primary_region = 'syd'
 
 [build]
 
 [env]
   PORT = "8081"
-  HOST = "https://hosted-payment-test-hidden-shadow-9014.fly.dev"
+  HOST = "https://simplify-commerce-hosted-payment.fly.dev"
   SHOPIFY_API_KEY = "2f4edaa67ab826c7ab31e5cbbd0cd5d3"
   SCOPES = "write_products"
 
