@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,27 +15,38 @@
             height: 100vh;
             margin: 0;
         }
+
         .payment-form {
-            background: #fff;
+            background: #E4E0D5;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 400px;
             text-align: center;
         }
+
         .payment-form h2 {
             margin-bottom: 20px;
-            color: #0044cc;
+            color: #121212;
         }
+
+        .payment-form h4 {
+            display: block;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
         .payment-form img {
             max-height: 50px;
             margin-bottom: 20px;
         }
+
         .payment-form label {
             display: block;
             margin-bottom: 5px;
             text-align: left;
         }
+
         .payment-form input[type="text"],
         .payment-form input[type="password"] {
             width: calc(100% - 20px);
@@ -43,27 +55,59 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
+        .payment-form input[type="text"].error,
+        .payment-form input[type="password"].error {
+            border-color: red;
+        }
+
         .payment-form .short-input {
             width: calc(50% - 20px);
             display: inline-block;
         }
+
         .payment-form button {
             width: 100%;
             padding: 15px;
-            background-color: #0044cc;
+            background-color: #2B473B;
             color: white;
             border: none;
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
         }
+
         .payment-form button:disabled {
             background-color: #ccc;
         }
+
         .footer {
             margin-top: 20px;
             font-size: 12px;
             color: #999;
+        }
+
+        .tooltip {
+            position: absolute;
+            background-color: #ffdddd;
+            color: red;
+            border: 1px solid red;
+            padding: 5px;
+            border-radius: 5px;
+            display: none;
+            z-index: 10;
+        }
+
+        .shake {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%   { transform: translateX(0); }
+            25%  { transform: translateX(-5px); }
+            50%  { transform: translateX(5px); }
+            75%  { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
         }
     </style>
     <script src="https://www.simplify.com/commerce/v1/simplify.js"></script>
@@ -72,19 +116,31 @@
 <body>
     <div class="payment-form">
         <img src="/images/simplifyLogo@2x.png" alt="Simplify Logo">
-        <h2>Payment Form</h2>
+        <h2>Simplify Online Payment</h2>
+        <p>Test Payment Form</p>
         <div id="credit-card-form">
+            <h4>Customer Information</h4>
+            <label for="customerName">Name</label>
+            <input type="text" id="customerName" placeholder="John Doe" onfocus="hideError('customerName')">
+            <span class="tooltip" id="tooltipCustomerName"></span>
+            <label for="customerEmail">Email</label>
+            <input type="text" id="customerEmail" placeholder="john.doe@example.com">
+
+            <h4>Payment Method</h4>
             <label for="cardNumber">Card number</label>
-            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456">
+            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" onfocus="hideError('cardNumber')">
+            <span class="tooltip" id="tooltipCardNumber"></span>
 
             <div style="display: flex; justify-content: space-between;">
                 <div class="short-input">
                     <label for="expiryDate">Expiry date</label>
-                    <input type="text" id="expiryDate" placeholder="MM/YY">
+                    <input type="text" id="expiryDate" placeholder="MM/YY" onfocus="hideError('expiryDate')">
+                    <span class="tooltip" id="tooltipExpiryDate"></span>
                 </div>
                 <div class="short-input">
                     <label for="securityCode">Security code</label>
-                    <input type="password" id="securityCode" placeholder="3 digits">
+                    <input type="password" id="securityCode" placeholder="3 digits" onfocus="hideError('securityCode')">
+                    <span class="tooltip" id="tooltipSecurityCode"></span>
                 </div>
             </div>
         </div>
@@ -100,43 +156,128 @@
         const amount = '<%= amount %>';
         const orderId = '<%= orderId %>';
 
+        function showError(inputId, message) {
+            const inputElement = document.getElementById(inputId);
+            const tooltip = document.getElementById('tooltip' + capitalize(inputId));
+            inputElement.classList.add('error');
+            tooltip.innerText = message;
+            tooltip.style.display = 'block';
+            tooltip.style.left = inputElement.offsetLeft + inputElement.offsetWidth + 'px';
+            tooltip.style.top = inputElement.offsetTop + 'px';
+        }
+
+        function hideError(inputId) {
+            const inputElement = document.getElementById(inputId);
+            const tooltip = document.getElementById('tooltip' + capitalize(inputId));
+            inputElement.classList.remove('error');
+            tooltip.style.display = 'none';
+        }
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        /*** 
+         * Validation for card number
+         * **/
+        function validateCardNumber(number) {
+            const regex = new RegExp("^[0-9]{16}$");
+            return regex.test(number) && luhnCheck(number);
+        }
+
+        function luhnCheck(val) {
+            let sum = 0;
+            for (let i = 0; i < val.length; i++) {
+                let intVal = parseInt(val.substr(i, 1));
+                if (i % 2 == 0) {
+                    intVal *= 2;
+                    if (intVal > 9) {
+                        intVal = 1 + (intVal % 10);
+                    }
+                }
+                sum += intVal;
+            }
+            return (sum % 10) == 0;
+        }
+
+        /*** 
+         * Validation for expiry date
+         * **/
+        function validateExpiryDate(month, year) {
+            const currentYear = new Date().getFullYear().toString().substr(-2);
+            const currentMonth = new Date().getMonth() + 1;
+
+            if (parseInt(year) < parseInt(currentYear)) {
+                return false;
+            } else if (parseInt(year) === parseInt(currentYear) && parseInt(month) < currentMonth) {
+                return false;
+            }
+            return true;
+        }
+
+        document.getElementById('expiryDate').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            if (value.length > 2) {
+                value = value.slice(0, 2) + '/' + value.slice(2, 4);
+            }
+            e.target.value = value;
+        });
+
         document.getElementById('payButton').addEventListener('click', function () {
+            const customerName = document.getElementById('customerName').value;
+            const customerEmail = document.getElementById('customerEmail').value;
             const cardNumber = document.getElementById('cardNumber').value;
             const expiryDate = document.getElementById('expiryDate').value.split('/');
             const securityCode = document.getElementById('securityCode').value;
 
-            SimplifyCommerce.generateToken({
-                key: publicKey,
-                card: {
-                    number: cardNumber,
-                    cvc: securityCode,
-                    expMonth: expiryDate[0],
-                    expYear: expiryDate[1]
-                }
-            }, simplifyResponseHandler);
+            // Validate required fields
+            let valid = true;
+            if (!customerName) {
+                showError('customerName', 'Your name is required.');
+                valid = false;
+            }
+            if (!customerEmail) {
+                showError('customerEmail', 'Your email is required.');
+                valid = false;
+            }
+            if (!cardNumber || !validateCardNumber(cardNumber)) {
+                showError('cardNumber', 'A valid credit/debit card is required.');
+                valid = false;
+            }
+            if (!expiryDate[0] || !expiryDate[1] || !validateExpiryDate(expiryDate[0], expiryDate[1])) {
+                showError('expiryDate', 'A valid expiry date is required.');
+                valid = false;
+            }
+            if (!securityCode || securityCode.length < 3) {
+                showError('securityCode', 'Security code is required.');
+                valid = false;
+            }
+
+            if (!valid) {
+                document.querySelector('.payment-form').classList.add('shake');
+                setTimeout(() => {
+                    document.querySelector('.payment-form').classList.remove('shake');
+                }, 500);
+                return;
+            }
+
+            /*** 
+             * TEST: Simulate successful card payment
+             * **/
+            const simulatedResponse = { id: '30001', paymentStatus: 'APPROVED' };
+            simulateResponseHandler(simulatedResponse);
         });
 
-        function simplifyResponseHandler(data) {
+        function simulateResponseHandler(data) {
             if (data.error) {
                 console.error('Error creating card token', data);
                 alert('Error creating card token: ' + data.error.message);
             } else {
-                const token = data.id;
-                $.post('/charge', {
-                    simplifyToken: token,
-                    amount: amount * 100, // Amount in cents
-                    orderId: orderId
-                }).done(function (response) {
-                    alert('Payment successfully processed: ' + response.id);
-                    // Redirect back to Shopify with order ID and payment status
-                    window.location.href = `/payment-success?orderId=${orderId}&status=success`;
-                }).fail(function (jqXHR, status) {
-                    alert('Payment processing failed: ' + status);
-                    window.location.href = `/payment-fail?orderId=${orderId}&status=fail`;
-                });
+                alert('Payment successfully processed for Order#' + data.id +'. Redirecting back to merchant page...');
+                window.location.href = `/payment-success?orderId=${orderId}&status=success`;
             }
         }
     </script>
-    
 </body>
+
 </html>
