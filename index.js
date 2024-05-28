@@ -27,7 +27,7 @@ const Shopify = new shopifyAPI({
 
 /* Root route */
 app.get('/', (req, res) => {
-    res.redirect('/payment?amount=100&orderId=12345'); // Redirect to the payment form with test data
+    res.redirect('/payment?amount=100&orderId=30001'); // Redirect to the payment form with test data
 });
 
 /* Route to render the payment form with order details */
