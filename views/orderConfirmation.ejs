@@ -1,0 +1,54 @@
+<!-- TEST SIMULATION FOR A ORDER CONFIRMATION PAGE -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .confirmation-message {
+            background: #E4E0D5;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .confirmation-message h2 {
+            margin-bottom: 20px;
+            color: #121212;
+        }
+
+        .confirmation-message p {
+            margin-bottom: 20px;
+        }
+
+        .confirmation-message a {
+            padding: 10px 20px;
+            background-color: #2B473B;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="confirmation-message">
+        <h2>Order Confirmation</h2>
+        <p>Thank you for your purhcase!. We'll notify you when your order is on its way.</p>
+        <p>Order ID: <%= orderId %></p>
+        <a href="/">Return to Home</a>
+    </div>
+</body>
+</html>

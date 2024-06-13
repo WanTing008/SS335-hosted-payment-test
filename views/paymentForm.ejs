@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
+            background-color: #2B473B;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -23,6 +23,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 400px;
             text-align: center;
+            position: relative;
         }
 
         .payment-form h2 {
@@ -103,16 +104,17 @@
         }
 
         @keyframes shake {
-            0%   { transform: translateX(0); }
-            25%  { transform: translateX(-5px); }
-            50%  { transform: translateX(5px); }
-            75%  { transform: translateX(-5px); }
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
             100% { transform: translateX(0); }
         }
     </style>
     <script src="https://www.simplify.com/commerce/v1/simplify.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
+
 <body>
     <div class="payment-form">
         <img src="/images/simplifyLogo@2x.png" alt="Simplify Logo">
@@ -177,9 +179,6 @@
             return str.charAt(0).toUpperCase() + str.slice(1);
         }
 
-        /*** 
-         * Validation for card number
-         * **/
         function validateCardNumber(number) {
             const regex = new RegExp("^[0-9]{16}$");
             return regex.test(number) && luhnCheck(number);
@@ -189,7 +188,7 @@
             let sum = 0;
             for (let i = 0; i < val.length; i++) {
                 let intVal = parseInt(val.substr(i, 1));
-                if (i % 2 == 0) {
+                if (i % 2 === 0) {
                     intVal *= 2;
                     if (intVal > 9) {
                         intVal = 1 + (intVal % 10);
@@ -197,12 +196,9 @@
                 }
                 sum += intVal;
             }
-            return (sum % 10) == 0;
+            return (sum % 10) === 0;
         }
 
-        /*** 
-         * Validation for expiry date
-         * **/
         function validateExpiryDate(month, year) {
             const currentYear = new Date().getFullYear().toString().substr(-2);
             const currentMonth = new Date().getMonth() + 1;
@@ -225,7 +221,6 @@
 
         document.getElementById('payButton').addEventListener('click', function () {
             const customerName = document.getElementById('customerName').value;
-            const customerEmail = document.getElementById('customerEmail').value;
             const cardNumber = document.getElementById('cardNumber').value;
             const expiryDate = document.getElementById('expiryDate').value.split('/');
             const securityCode = document.getElementById('securityCode').value;
@@ -234,10 +229,6 @@
             let valid = true;
             if (!customerName) {
                 showError('customerName', 'Your name is required.');
-                valid = false;
-            }
-            if (!customerEmail) {
-                showError('customerEmail', 'Your email is required.');
                 valid = false;
             }
             if (!cardNumber || !validateCardNumber(cardNumber)) {
@@ -261,9 +252,7 @@
                 return;
             }
 
-            /*** 
-             * TEST: Simulate successful card payment
-             * **/
+            // Simulate successful card payment
             const simulatedResponse = { id: '30001', paymentStatus: 'APPROVED' };
             simulateResponseHandler(simulatedResponse);
         });
@@ -273,7 +262,7 @@
                 console.error('Error creating card token', data);
                 alert('Error creating card token: ' + data.error.message);
             } else {
-                alert('Payment successfully processed for Order#' + data.id +'. Redirecting back to merchant page...');
+                alert('Payment successfully processed for Order#' + data.id + '. Redirecting back to merchant page...');
                 window.location.href = `/payment-success?orderId=${orderId}&status=success`;
             }
         }
