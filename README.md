@@ -1,6 +1,6 @@
 # CommBank Simplify Hosted Payment Gateway
 Commbank Simplify Hosted Payment Test for J&K Labs. 
-This implementation is still a work in progress, runs locally. 
+This implementation is still a prototype work in progress, payment form can only be run locally on `localhost`. 
 
 ## Run Instructions (Local)
 1. Run `npm install express dotenv request body-parser` to install the necessary JavaScript node modules to run the local payment form.
