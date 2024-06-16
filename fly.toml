@@ -10,8 +10,8 @@ primary_region = 'syd'
 
 [env]
   PORT = "8081"
-  HOST = "https://simplify-commerce-hosted-payment.fly.dev"
-  SHOPIFY_API_KEY = "2f4edaa67ab826c7ab31e5cbbd0cd5d3"
+  HOST = "https://(insert-hosted-url-here)"
+  SHOPIFY_API_KEY = "insert-shopify-key-here"
   SCOPES = "write_products"
 
 [http_service]
