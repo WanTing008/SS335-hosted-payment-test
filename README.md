@@ -1,4 +1,4 @@
-# Simplify Hosted Payment
+# CommBank Simplify Hosted Payment Gateway
 Commbank Simplify Hosted Payment Test for J&K Labs. This implementation is still a work in progress, runs locally. 
 
 ## Disclaimer
